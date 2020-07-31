@@ -6,7 +6,12 @@ For installing Dictu, please see the [repository here](https://github.com/dictu-
 
 ## Getting started
 
-Once you have Dictu installed you're ready to create your first website!
+Once you have Dictu installed you're ready to create your first website! To run the project execute the `server.du` file. By default it will listen on `127.0.0.1:8080`.
+
+```
+$ dictu server.du
+'Starting server on 127.0.0.1:8080'
+```
 
 ### Routing
 
