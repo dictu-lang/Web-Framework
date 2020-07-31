@@ -1,0 +1,30 @@
+import JSON;
+
+abstract class BaseResponse {
+    var statusCodes = {
+        // 2xx
+        200: "200 OK",
+        // 3xx
+        // 4xx
+        404: "404 NOT FOUND",
+        // 5xx
+    };
+}
+
+class Response < BaseResponse {
+    init(content, mimeType="text/html", status=200) {
+        this.content = content;
+        this.contentLength = content.len();
+        this.mimeType = mimeType;
+        this.status = this.statusCodes[status];
+    }
+}
+
+class JsonResponse < BaseResponse {
+    init(content, status="200 OK") {
+        this.content = JSON.stringify(content);
+        this.contentLength = this.content.len();
+        this.mimeType = "application/json";
+        this.status = this.statusCodes[status];
+    }
+}

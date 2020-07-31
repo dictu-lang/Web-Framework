@@ -1,0 +1,16 @@
+import JSON;
+
+import "response.du" as ResponseModule;
+import "controllers/indexController.du" as IndexControllerModule;
+
+
+var routes = {
+    "/": {
+        "GET": IndexControllerModule.index,
+    },
+    "/json": {
+        "GET": def () => {
+            return ResponseModule.JsonResponse(['test']);
+        }
+    }
+};
