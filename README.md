@@ -36,7 +36,7 @@ var routes = {
 };
 ```
 
-[Base routes.du file]()
+[Base routes.du file](https://github.com/dictu-lang/Web-Framework/blob/master/routing.du)
 
 ### Controllers
 
@@ -51,6 +51,8 @@ def index() {
 ```
 
 Within this file, we can create as many functions as we need to handle the different endpoints all relating to similar logic, for example, the above could introduce a new function to handle `POST` HTTP requests. You can also create more controller files to handle other routes and import to `routes.du` as required.
+
+[Example controller](https://github.com/dictu-lang/Web-Framework/blob/master/controllers/indexController.du)
 
 ### Responses
 
@@ -77,6 +79,8 @@ class JsonResponse < BaseResponse {
 ```
 
 The first is a generic `Reponse` object which will mainly be used for serving HTML content, however it does allow for the contents mime type to be changed at will. The second is used for JSON responses, and will automatically stringify the content passed to it, allowing things like arrays be passed to a JSON object and be handled accordingly.
+
+[Base response.du file](https://github.com/dictu-lang/Web-Framework/blob/master/response.du) 
 
 #### Example usage
 
