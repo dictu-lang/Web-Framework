@@ -43,7 +43,7 @@ var routes = {
 The controllers directory allows you to create controller files which can handle your business logic for your website. The project comes with an example controller `indexController.du` within the directory with the following content.
 
 ```js
-import "utils/utils.du" as UtilModule;
+import "../utils/utils.du" as UtilModule;
 
 def index() {
     return UtilModule.view('index');
@@ -69,7 +69,7 @@ class Response < BaseResponse {
 }
 
 class JsonResponse < BaseResponse {
-    init(content, status="200 OK") {
+    init(content, status=200) {
         this.content = JSON.stringify(content);
         this.contentLength = this.content.len();
         this.mimeType = "application/json";
@@ -103,7 +103,7 @@ Views are HTML files that will be sent to the user. Within this framework they l
 There is an example of using the `view()` helper function within the `indexController.du` file already.
 
 ```js
-import "utils/utils.du" as UtilModule;
+import "../utils/utils.du" as UtilModule;
 
 def index() {
     return UtilModule.view('index');
