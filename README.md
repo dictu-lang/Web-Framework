@@ -1,121 +1,38 @@
 # Dictu Web Framework
+This is a proof of concept web framework heavily inspired from [https://expressjs.com/](https://expressjs.com/).
 
-This project is a proof of concept project that essentially creates a very simple web framework in [Dictu](https://dictu-lang.com). To run this project you must have at least [Dictu version 0.9.0](https://github.com/dictu-lang/Dictu/releases/tag/v0.9.0) as this is when Dictu introduced the Socket module.
+**Note:** This is NOT production ready.
 
-For installing Dictu, please see the [repository here](https://github.com/dictu-lang/Dictu).
+## Features
+This project is currently setup to have 4 routes. `/`, `/login`, `/logout` and `/home`.
+- `/` - GET
+    - This route is the login page for the system, it has an incredibly basic login form located in static/views/index.html.
+- `/login` - POST
+    - This is the route that handles logging a user in. Users are logged in by their session containing a "logged_in" flag, if this is false or not present, they will not be logged in.
+- `/logout` - GET
+    - This sets the "logged_in" session flag to false.
+- `/home` - GET
+    - This is a protected route that can only be accessed when the "logged_in" flag is present within the users session.
 
-## Getting started
+### Technical details
+The users session is stored within HTTP Only a cookie within the users browser and because of this, they must be signed. They are signed with [HMAC-SHA256](https://en.wikipedia.org/wiki/HMAC) and verified on every request to ensure there has been no tampering.
 
-Once you have Dictu installed you're ready to create your first website! To run the project execute the `server.du` file. By default it will listen on `127.0.0.1:8080`.
+Users themselves are stored within a SQLite database (more in the next section) in a very basic username | password table setup. The users password are hashed using bcrypt.
+
+## Running
+To get up and running we must first create the SQLite database and seed a user, to do so run `setup.du`
 
 ```
-$ dictu server.du
-'Starting server on 127.0.0.1:8080'
+$ dictu setup.du
 ```
 
-### Routing
+This will ask you where the SQLite database should be stored, for this project enter `users.db` along with a username and password of your choice.
 
-The routes for the framework are defined in `routes.du`. In here we have a dictionary which maps endpoints and given HTTP verbs to an eventual function call. The outer key is the route coming in from the request, and an inner dictionary contains the HTTP verb for the request, this allows us to have the same route, yet act on many different HTTP verbs - GET, POST, etc.
+Afterwards start the server
 
-```js
-import JSON;
-
-import "response.du" as ResponseModule;
-import "controllers/indexController.du" as IndexControllerModule;
-
-
-var routes = {
-    "/": {
-        "GET": IndexControllerModule.index,
-    },
-    "/json": {
-        "GET": def () => {
-            return ResponseModule.JsonResponse(['test']);
-        }
-    }
-};
+```
+$ dictu run.du
 ```
 
-[Base routes.du file](https://github.com/dictu-lang/Web-Framework/blob/master/routing.du)
-
-### Controllers
-
-The controllers directory allows you to create controller files which can handle your business logic for your website. The project comes with an example controller `indexController.du` within the directory with the following content.
-
-```js
-import "utils/utils.du" as UtilModule;
-
-def index() {
-    return UtilModule.view('index');
-}
-```
-
-Within this file, we can create as many functions as we need to handle the different endpoints all relating to similar logic, for example, the above could introduce a new function to handle `POST` HTTP requests. You can also create more controller files to handle other routes and import to `routes.du` as required.
-
-[Example controller](https://github.com/dictu-lang/Web-Framework/blob/master/controllers/indexController.du)
-
-### Responses
-
-The return value from a route must be a response object. There are currently two built in response objects.
-
-```js
-class Response < BaseResponse {
-    init(content, mimeType="text/html", status=200) {
-        this.content = content;
-        this.contentLength = content.len();
-        this.mimeType = mimeType;
-        this.status = this.statusCodes[status];
-    }
-}
-
-class JsonResponse < BaseResponse {
-    init(content, status="200 OK") {
-        this.content = JSON.stringify(content);
-        this.contentLength = this.content.len();
-        this.mimeType = "application/json";
-        this.status = this.statusCodes[status];
-    }
-}
-```
-
-The first is a generic `Reponse` object which will mainly be used for serving HTML content, however it does allow for the contents mime type to be changed at will. The second is used for JSON responses, and will automatically stringify the content passed to it, allowing things like arrays be passed to a JSON object and be handled accordingly.
-
-[Base response.du file](https://github.com/dictu-lang/Web-Framework/blob/master/response.du) 
-
-#### Example usage
-
-There is an example of using the `JsonResponse` within the `routes.du` file already.
-
-```js
-"/json": {
-	"GET": def () => {
-		return ResponseModule.JsonResponse(['test']);
-	}
-}
-```
-
-### Views
-
-Views are HTML files that will be sent to the user. Within this framework they live within the `views` directory. When you wish to return a view to a user from a given route, you can use the `utils.du`'s `view` helper function.
-
-#### Example
-
-There is an example of using the `view()` helper function within the `indexController.du` file already.
-
-```js
-import "utils/utils.du" as UtilModule;
-
-def index() {
-    return UtilModule.view('index');
-}
-```
-
-As you can see, when using the helper function the `.html` extension should not be passed, and only the filename.
-
-## Contributing
-
-This is currently a very minimalistic framework and is missing quite a lot of functionality. Contributions to this framework are however incredibly welcome either through issue reports or pull requests!
-
-## License
-
-This project is licensed under the MIT license.
+## Alternative
+To see a more "verbose" framework where you would setup defined controllers along with their routes in a more organised manner see the [verbose-routing branch](https://github.com/dictu-lang/Web-Framework/tree/verbose-routing).

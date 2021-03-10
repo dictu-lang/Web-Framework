@@ -1,0 +1,68 @@
+import Hashlib;
+
+from "framework/app.du" import App;
+from "framework/response.du" import JsonResponse, ErrorResponse;
+from "framework/session.du" import SessionHandler;
+
+from "database/sqlite.du" import SqliteConnection;
+
+var app = App("127.0.0.1", 8080, true);
+app.key = '12345';
+app.database = SqliteConnection("users.db");
+
+app.addSessionHandler(SessionHandler(app));
+
+def getStaticContent(path) {
+    with("static/{}".format(path), "r") {
+        return file.read();
+    }
+}
+
+app.get("/", def (request) => {
+    return getStaticContent("views/index.html");
+});
+
+app.post("/login", def (request) => {
+    var username = request.body.get("username", false);
+    var password = request.body.get("password", false);
+
+    if (!username or !password) {
+        return ErrorResponse("Invalid username or password", 400);
+    }
+
+    var user = app.database.execute("SELECT rowid, password FROM users WHERE username = ?", [
+        username
+    ]);
+
+    if (!user) {
+        return ErrorResponse("Invalid username or password", 401);
+    }
+
+    var [userId, hashedPassword] = user[0];
+
+    if (!Hashlib.bcryptVerify(password, hashedPassword)) {
+        return ErrorResponse("Invalid username or password", 401);
+    }
+
+    request.session["logged_in"] = true;
+    return "Hello {}!".format(username);
+});
+
+app.get("/home", def (request) => {
+    if (!request.session.get("logged_in", false)) {
+        return ErrorResponse("You are not authorised!", 401);
+    }
+
+    return getStaticContent("views/home.html");
+});
+
+app.get("/logout", def (request) => {
+    request.session["logged_in"] = false;
+    return "Logged out!";
+});
+
+app.get("/api/test", def (request) => {
+    return JsonResponse([1, 2, 3]);
+});
+
+app.start();
