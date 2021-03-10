@@ -1,4 +1,4 @@
-import "utils/utils.du" as UtilModule;
+import "../utils/utils.du" as UtilModule;
 
 def index() {
     return UtilModule.view('index');

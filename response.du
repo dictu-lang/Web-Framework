@@ -4,9 +4,10 @@ abstract class BaseResponse {
     var statusCodes = {
         // 2xx
         200: "200 OK",
+        201: "201 Created",
         // 3xx
         // 4xx
-        404: "404 NOT FOUND",
+        404: "404 Not Found",
         // 5xx
     };
 }
@@ -21,8 +22,8 @@ class Response < BaseResponse {
 }
 
 class JsonResponse < BaseResponse {
-    init(content, status="200 OK") {
-        this.content = JSON.stringify(content);
+    init(content, status=200) {
+        this.content = JSON.stringify(content).unwrap();
         this.contentLength = this.content.len();
         this.mimeType = "application/json";
         this.status = this.statusCodes[status];

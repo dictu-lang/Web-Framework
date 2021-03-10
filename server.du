@@ -7,17 +7,18 @@ import "response.du" as ResponseModule;
 import "utils/utils.du" as UtilModule;
 
 class WebServer {
-    init(host, port) {
-        this.host = host;
-        this.port = port;
-    }
+    init(var host, var port) {}
 
     start() {
-        this.socket = Socket.create(Socket.AF_INET, Socket.SOCK_STREAM);
+        this.socket = Socket.create(Socket.AF_INET, Socket.SOCK_STREAM).unwrap();
         this.socket.setsockopt(Socket.SOL_SOCKET, Socket.SO_REUSEADDR);
+
         print("Starting server on {}:{}".format(this.host, this.port));
-        if (!this.socket.bind(this.host, this.port)) {
-            print(Socket.strerror());
+
+        const boundSocket = this.socket.bind(this.host, this.port);
+
+        if (!boundSocket.success()) {
+            print(boundSocket.unwrapError());
             return;
         }
         this.listen();
@@ -26,15 +27,13 @@ class WebServer {
     listen() {
         this.socket.listen();
         while {
-            // print("Begin loop");
-            var client = this.socket.accept();
-            // print("Accept client!");
+            var [client, address] = this.socket.accept().unwrap();
             this.handleClient(client);
         }
     }
 
     handleClient(client) {
-        var data = client.recv(1024);
+        var data = client.recv(1024).unwrap();
         var rawData = data.split(" ");
 
         if (rawData.len() < 2) {

@@ -1,4 +1,4 @@
-import "response.du" as ResponseModule;
+import "../response.du" as ResponseModule;
 
 def view(name) {
     with('views/{}.html'.format(name), 'r') {
