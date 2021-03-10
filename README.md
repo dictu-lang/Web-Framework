@@ -1,6 +1,6 @@
 # Dictu Web Framework
 
-This project is a proof of concept project that essentially creates a very simple web framework in [Dictu](https://dictu-lang.com). To run this project you must have at least [Dictu version 0.9.0](https://github.com/dictu-lang/Dictu/releases/tag/v0.9.0) as this is when Dictu introduced the Socket module.
+This project is a proof of concept project that essentially creates a very simple web framework in [Dictu](https://dictu-lang.com).
 
 For installing Dictu, please see the [repository here](https://github.com/dictu-lang/Dictu).
 
