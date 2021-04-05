@@ -1,17 +1,15 @@
 import Socket;
 
 class Server {
-    var HTTP_DELIMITER = "\r\n\r\n"; 
+    var HTTP_DELIMITER = "\r\n\r\n";
 
-    init(callback, host="127.0.0.1", port=8080) {
+    // TODO: Investigate why callback can't be private
+    init(var callback, private host="127.0.0.1", private port=8080) {
         this.socket = nil;
-        this.host = host;
-        this.port = port;
-        this.callback = callback;
     }
 
     start() {
-        var socket = Socket.create(Socket.AF_INET, Socket.SOCK_STREAM);
+        const socket = Socket.create(Socket.AF_INET, Socket.SOCK_STREAM);
 
         if (!socket.success()) {
             print(this.socket.unwrapError());
@@ -19,9 +17,10 @@ class Server {
         }
 
         this.socket = socket.unwrap();
-
         this.socket.setsockopt(Socket.SOL_SOCKET, Socket.SO_REUSEADDR);
+        
         print("Starting server on {}:{}".format(this.host, this.port));
+        
         if (!this.socket.bind(this.host, this.port).success()) {
             print("Failed to bind socket");
             System.exit(1);
@@ -31,27 +30,27 @@ class Server {
     }
 
     listen() {
-        var result = this.socket.listen();
+        const result = this.socket.listen();
         if (!result.success()) {
             print(result.unwrapError());
             System.exit(1);
         }
         
         while {
-            var connection = this.socket.accept();
+            const connection = this.socket.accept();
 
             if (!connection.success()) {
                 print(connection.unwrapError());
                 System.exit(1);
             }
 
-            var [client, address] = connection.unwrap();
+            const [client, address] = connection.unwrap();
             this.handleClient(client, address);
         }
     }
 
     handleClient(client, address) {
-        var data = this.getData(client);
+        const data = this.getData(client);
         if (data != '') {
             this.callback(client, address, data);
         }
@@ -73,7 +72,7 @@ class Server {
         }
 
         while {
-            var data = client.recv(size);
+            const data = client.recv(size);
 
             if (!data.success()) {
                 print(data.unwrapError());

@@ -1,10 +1,10 @@
 class Request {
     init(data) {
-        var rawData = data.split("\r\n\r\n");
-        var headers = rawData[0].split("\r\n");
-        var body = rawData[1];
+        const rawData = data.split("\r\n\r\n");
+        const headers = rawData[0].split("\r\n");
+        const body = rawData[1];
         
-        var routeData = headers[0].split(" ");
+        const routeData = headers[0].split(" ");
 
         this.verb = routeData[0];
         
@@ -22,7 +22,7 @@ class Request {
     parseUrl(route) {
         this.query = {};
 
-        var url = route.split("?");
+        const url = route.split("?");
         this.route = url[0];
 
         // No query parameters

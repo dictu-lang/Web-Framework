@@ -38,15 +38,14 @@ abstract class BaseResponse {
     }
 
     send(client) {
-        var headers = "HTTP/1.1 {}\r\nDate: {}\r\n".format(this.status, Datetime.strftime("%a, %d %b %Y %H:%M:%S"));
-        var headerKeys = this.headers.keys();
-
-        for (var i = 0; i < headerKeys.len(); i += 1) {
-            headers += "{}: {}\r\n".format(headerKeys[i], this.headers[headerKeys[i]]);
-        }
+        var responseHeaders = "HTTP/1.1 {}\r\nDate: {}\r\n".format(this.status, Datetime.strftime("%a, %d %b %Y %H:%M:%S"));
+        
+        this.headers.keys().forEach(def (key) => {
+            responseHeaders += "{}: {}\r\n".format(key, this.headers[key]);
+        });
 
         client.write(
-            headers +
+            responseHeaders +
             "\r\n" +
             this.content
         );
