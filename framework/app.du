@@ -5,9 +5,8 @@ import "request.du" as RequestModule;
 import "response.du" as ResponseModule;
 
 class App {
-    init(host="127.0.0.1", port=8080, debug=false) {
+    init(host="127.0.0.1", port=8080, private debug=false) {
         this.server = ServerModule.Server(this.response, host, port);
-        this.debug = debug;
 
         this.routes = {
             "GET": {},
@@ -25,7 +24,7 @@ class App {
     }
 
     response(client, address, data) {
-        var request = RequestModule.Request(data);
+        const request = RequestModule.Request(data);
         if (this.debug) {
             print("{} [{}] {} {}".format(
                 address,
@@ -74,7 +73,7 @@ class App {
 
     handleMiddleware(request) {
         for (var i = 0; i < this.middleware.len(); i += 1) {
-            var response = this.middleware[i](request);
+            const response = this.middleware[i](request);
             if (response != nil) {
                 return response;
             }

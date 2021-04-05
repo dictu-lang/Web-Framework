@@ -6,7 +6,7 @@ from "framework/session.du" import SessionHandler;
 
 from "database/sqlite.du" import SqliteConnection;
 
-var app = App("127.0.0.1", 8080, true);
+const app = App("0.0.0.0", 8080, true);
 app.key = '12345';
 app.database = SqliteConnection("users.db");
 
@@ -23,14 +23,14 @@ app.get("/", def (request) => {
 });
 
 app.post("/login", def (request) => {
-    var username = request.body.get("username", false);
-    var password = request.body.get("password", false);
+    const username = request.body.get("username", false);
+    const password = request.body.get("password", false);
 
     if (!username or !password) {
         return ErrorResponse("Invalid username or password", 400);
     }
 
-    var user = app.database.execute("SELECT rowid, password FROM users WHERE username = ?", [
+    const user = app.database.execute("SELECT rowid, password FROM users WHERE username = ?", [
         username
     ]);
 
@@ -38,7 +38,7 @@ app.post("/login", def (request) => {
         return ErrorResponse("Invalid username or password", 401);
     }
 
-    var [userId, hashedPassword] = user[0];
+    const [userId, hashedPassword] = user[0];
 
     if (!Hashlib.bcryptVerify(password, hashedPassword)) {
         return ErrorResponse("Invalid username or password", 401);

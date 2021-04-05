@@ -6,17 +6,17 @@ import Sqlite;
  * It makes the assumption the database has not been created before.
  */
 
- var path = input("Where is the SQLite database file located? ");
+const path = input("Where is the SQLite database file located? ");
 
- var connection = Sqlite.connect(path).unwrap();
+const connection = Sqlite.connect(path).unwrap();
 
- var table = "CREATE TABLE users (username TEXT, password TEXT)";
- connection.execute(table);
+const table = "CREATE TABLE users (username TEXT, password TEXT)";
+connection.execute(table);
 
- var username = input("What is your username? ");
- var password = input("What is your password? ");
+const username = input("What is your username? ");
+const password = input("What is your password? ");
 
- connection.execute("INSERT INTO users VALUES (?, ?)", [
-     username,
-     Hashlib.bcrypt(password)
- ]);
+connection.execute("INSERT INTO users VALUES (?, ?)", [
+    username,
+    Hashlib.bcrypt(password)
+]);
