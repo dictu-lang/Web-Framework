@@ -1,3 +1,6 @@
+# Wanbli
+For a more up-to-date version please see [Wanbli](https://github.com/briandowns/wanbli)
+
 # Dictu Web Framework
 This is a proof of concept web framework heavily inspired from [https://expressjs.com/](https://expressjs.com/).
 
